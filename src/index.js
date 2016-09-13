@@ -1,13 +1,6 @@
+import KievMapView from './views/KievMapView';
 
-import ol from 'openlayers';
+const appRootNode = document.getElementById('app-root');
+const kievMap = new KievMapView;
 
-new ol.Map({
-  layers: [
-    new ol.layer.Tile({source: new ol.source.OSM()})
-  ],
-  view: new ol.View({
-    center: [0, 0],
-    zoom: 13
-  }),
-  target: 'kiev-map'
-});
+kievMap.render(appRootNode);
