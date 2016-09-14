@@ -24,6 +24,14 @@ module.exports = {
           query: {
             presets: ['es2015']
           }
+        },
+        {
+          test: /\.json/,
+          loader: 'json'
+        },
+        {
+          test: /\.css/,
+          loader: "style-loader!css-loader?-url"          
         }
       ],
 
