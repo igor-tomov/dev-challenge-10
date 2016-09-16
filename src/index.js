@@ -5,7 +5,6 @@
 // include styles
 require('openlayers/dist/ol.css');
 require('bootstrap/dist/css/bootstrap.css');
-require('bootstrap-select/dist/css/bootstrap-select.css');
 require('./styles/index.css');
 
 // import the models
@@ -18,14 +17,23 @@ import {
 } from './config';
 
 import AppMapView from './views/AppMapView';
-import {GeoCoordinate, GeoCoordinateList} from './models/GeoCoordinate';
+import RoutePanelView from './views/RoutePanelView';
+import {GeoCoordinateList} from './models/GeoCoordinateModel';
 import geoCoordinateData from './data/kiev-metro-stations.json';
+
 
 
 // select app-root DOM node
 const appRootNode = document.getElementById(APP_ROOT_NODE);
 
+// instantiate App models
 const coordinateList = new GeoCoordinateList(geoCoordinateData);
+
+coordinateList.on('route:search', items => console.log(items));
+
+const routePanel = new RoutePanelView({
+  model: coordinateList
+});
 
 // instantiate Map view
 const kievMap = new AppMapView;

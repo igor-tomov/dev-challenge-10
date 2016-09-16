@@ -6,7 +6,23 @@ html, body, .app-root, .kiev-map {
 
 .panel-route-widget {
   position: absolute;
-  width: 400px;
-  top: 50px;
-  right: 50px;
+  width: 350px;
+  top: 10px;
+  right: 15px;
+}
+
+.panel-route-widget .station-selectbox {
+  max-width: 320px;
+}
+
+.panel-route-widget .form-group:last-child {
+  margin-bottom: 0;
+}
+
+.panel-route-widget .form-group .btn-primary {
+  width: 100px;
+}
+
+.panel-route-widget .form-group .btn-danger {
+  width: 70px;
 }

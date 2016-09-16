@@ -6,26 +6,22 @@
   </head>
   <body>
     <div id="app-root" class="app-root"></div>
-    <div class="panel panel-default panel-route-widget">
+    <div id="panel-route" class="panel panel-default panel-route-widget">
       <div class="panel-heading">
         Выберите маршрут
       </div>
       <div class="panel-body">
         <div class="form-group">
           <label for="from-station">Со станции:</label>
-          <select id="from-station" class="selectpicker" data-role="from-station">
-            <option>Mustard</option>
-            <option>Ketchup</option>
-            <option>Relish</option>
-          </select>
+          <select id="from-station" class="station-selectbox" data-order="1"></select>
         </div>
         <div class="form-group">
           <label for="to-station">До станции:</label>
-          <select id="to-station" class="selectpicker" data-role="to-station">
-            <option>Mustard</option>
-            <option>Ketchup</option>
-            <option>Relish</option>
-          </select>
+          <select id="to-station" class="station-selectbox" data-order="2"></select>
+        </div>
+        <div class="form-group">
+          <button id="find-route" class="btn btn-primary" type="submit">Поиск</button>
+          <button id="reset-route" class="btn btn-danger" type="submit">Сброс</button>
         </div>
       </div>
     </div>
