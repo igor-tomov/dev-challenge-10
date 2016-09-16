@@ -16,7 +16,8 @@ import {
   MAP_MIN_ZOOM
 } from './config';
 
-import AppMapView from './views/AppMapView';
+import {Model} from 'backbone';
+import RouteMapView from './views/RouteMapView';
 import RoutePanelView from './views/RoutePanelView';
 import {GeoCoordinateList} from './models/GeoCoordinateModel';
 import geoCoordinateData from './data/kiev-metro-stations.json';
@@ -28,18 +29,20 @@ const appRootNode = document.getElementById(APP_ROOT_NODE);
 
 // instantiate App models
 const coordinateList = new GeoCoordinateList(geoCoordinateData);
+const compositeModel = new Model;
 
-coordinateList.on('route:search', items => console.log(items));
+compositeModel.set({ coordinateList });
 
+// instantiate Route panel view
 const routePanel = new RoutePanelView({
   model: coordinateList
 });
 
 // instantiate Map view
-const kievMap = new AppMapView;
+const mapView = new RouteMapView({model: compositeModel});
 
-// rener the app
-kievMap.render(appRootNode, {
+// rener the map
+mapView.render(appRootNode, {
   mapCoord: MAP_CENTER_COORDINATES,
   zoom: MAP_START_ZOOM,
   minZoom: MAP_MIN_ZOOM,

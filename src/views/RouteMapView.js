@@ -1,6 +1,9 @@
 import {View} from 'backbone';
 import ol from 'openlayers';
 
+const MARKER_SRC = require('../assets/metro-station-icon-small.png');
+const SELECTED_MARKER_SRC = require('../assets/metro-station-icon-small-selected.png');
+
 
 /**
  * Represents Map container
@@ -8,6 +11,12 @@ import ol from 'openlayers';
 export default View.extend({
 
   className: "kiev-map",
+
+  initialize() {
+    this.listenTo(this.model.get('coordinateList'), 'change:selected', this._onSelectMarkers);
+  },
+
+
 
   /**
    * Build marker list according to an appropriate model
@@ -27,18 +36,40 @@ export default View.extend({
     }, new ol.source.Vector);
 
     const iconStyle = new ol.style.Style({
-        image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+        image: new ol.style.Icon({
         //anchor: [0.5, 46],
         anchorXUnits: 'fraction',
         anchorYUnits: 'pixels',
         opacity: 0.9,
-        src: require('../assets/metro-station-icon-small.png')
-      }))
+        src: MARKER_SRC
+      })
     });
 
     return new ol.layer.Vector({
       source: vectorSource,
       style: iconStyle
+    });
+  },
+
+
+
+  selectMarkers() {
+    const coordList = this.model.get('coordinateList');
+
+    this.mapControl.getLayers().item(1).getSource().getFeatures().forEach((feature, i) => {
+      const coordItem = coordList.at(i);
+
+      if (coordItem.get('selected')) {
+        feature.setStyle(new ol.style.Style({
+          image: new ol.style.Icon({
+            anchorXUnits: 'fraction',
+            anchorYUnits: 'pixels',
+            src: SELECTED_MARKER_SRC
+          })
+        }));
+      } else if (feature.getStyle() !== null) {
+        feature.setStyle(null);
+      }
     });
   },
 
@@ -51,7 +82,7 @@ export default View.extend({
     mountNode.appendChild(element);
 
     // Instanciate a Map, set the object target to the map DOM id
-    var map = new ol.Map({
+    this.mapControl = new ol.Map({
       target: element,
 
       layers: [
@@ -68,5 +99,11 @@ export default View.extend({
     });
 
     return this;
+  },
+
+
+
+  _onSelectMarkers() {
+    this.selectMarkers();
   }
 });

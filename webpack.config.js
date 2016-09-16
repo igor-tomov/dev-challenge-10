@@ -10,9 +10,8 @@ module.exports = {
     ],
 
     output: {
-      path: __dirname,
-      publicPath: `${__dirname}/public`,
-      filename: "public/dist/app.bundle.js"
+      path: __dirname + '/public',
+      filename: "dist/app.bundle.js"
     },
 
     module: {
@@ -26,12 +25,19 @@ module.exports = {
           }
         },
         {
-          test: /\.json/,
+          test: /\.json$/,
           loader: 'json'
         },
         {
-          test: /\.css/,
-          loader: "style-loader!css-loader?-url"          
+          test: /\.css$/,
+          loader: "style-loader!css-loader?-url"
+        },
+        {
+          test: /\.png$/,
+          loader: "file-loader",
+          query: {
+            name: "assets/img/[name].[ext]",
+          }
         }
       ],
 
