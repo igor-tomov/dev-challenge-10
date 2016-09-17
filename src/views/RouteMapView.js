@@ -13,7 +13,9 @@ export default View.extend({
   className: "kiev-map",
 
   initialize() {
-    this.listenTo(this.model.get('coordinateList'), 'change:selected', this._onSelectMarkers);
+    const coordinateList = this.model.get('coordinateList');
+    this.listenTo(coordinateList, 'change:selected', this._onSelectMarkers);
+    this.listenTo(coordinateList, 'route:search', this._onSearchRoute);
   },
 
 
@@ -52,7 +54,9 @@ export default View.extend({
   },
 
 
-
+  /**
+   * select map markers on UI accoiding to current Coordinate Model state
+   */
   selectMarkers() {
     const coordList = this.model.get('coordinateList');
 
@@ -74,7 +78,11 @@ export default View.extend({
   },
 
 
-
+  /**
+   * Render the map container
+   * @param {HTMLElement} mountNode - map DOM-container
+   * @param {Object} options - map specific options
+   */
   render(mountNode, options){
     const element = this.el;
 
@@ -105,5 +113,13 @@ export default View.extend({
 
   _onSelectMarkers() {
     this.selectMarkers();
+  },
+
+
+
+  _onSearchRoute(coordItems) {
+    const [coordStart, coordEnd] = coordItems.map(item => item.get('location'));
+
+    this.model.get('mapRoutingModel').search(coordStart, coordEnd);
   }
 });

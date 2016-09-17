@@ -10,6 +10,7 @@ require('./styles/index.css');
 // import the models
 import {
   APP_ROOT_NODE,
+  OSM_ENDPOINT,
   MAP_CENTER_COORDINATES,
   MAP_START_ZOOM,
   MAP_MAX_ZOOM,
@@ -20,18 +21,18 @@ import {Model} from 'backbone';
 import RouteMapView from './views/RouteMapView';
 import RoutePanelView from './views/RoutePanelView';
 import {GeoCoordinateList} from './models/GeoCoordinateModel';
+import MapRoutingModel from './models/MapRoutingModel';
 import geoCoordinateData from './data/kiev-metro-stations.json';
-
-
 
 // select app-root DOM node
 const appRootNode = document.getElementById(APP_ROOT_NODE);
 
 // instantiate App models
-const coordinateList = new GeoCoordinateList(geoCoordinateData);
-const compositeModel = new Model;
+const coordinateList  = new GeoCoordinateList(geoCoordinateData);
+const mapRoutingModel = new MapRoutingModel({endpoint: OSM_ENDPOINT });
+const compositeModel  = new Model;
 
-compositeModel.set({ coordinateList });
+compositeModel.set({ coordinateList, mapRoutingModel });
 
 // instantiate Route panel view
 const routePanel = new RoutePanelView({
