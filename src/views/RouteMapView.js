@@ -16,6 +16,7 @@ export default View.extend({
     const coordinateList = this.model.get('coordinateList');
     this.listenTo(coordinateList, 'change:selected', this._onSelectMarkers);
     this.listenTo(coordinateList, 'route:search', this._onSearchRoute);
+    this.listenTo(this.model.get('mapRoutingModel'), 'change:data', this._onRouteDataChange);
   },
 
 
@@ -78,6 +79,48 @@ export default View.extend({
   },
 
 
+
+  renderRoutes(data) {
+    const {mapControl} = this;
+    const mapLayers = mapControl.getLayers();
+
+    // remove previous route layer
+    if (mapLayers.length > 2) {
+      mapControl.removeLayer(mapLayers.item(2));
+    }
+
+    // just finish the render in case of invalid data
+    if (! data || ! Array.isArray(data)) {
+      return;
+    }
+
+    const coordList = data.map(
+      item => ol.proj.transform([item.lng, item.lat], 'EPSG:4326',   'EPSG:3857')
+    );
+
+    const polygon       = new ol.geom.Polygon([coordList]);
+    const feature       = new ol.Feature({ geometry: polygon });
+    const vectorSource  = new ol.source.Vector({ features: [feature] });
+    const vectorLayer   = new ol.layer.Vector({ source: vectorSource });
+
+    /*const coordList = data.map(item =>
+      ol.proj.transform([data.lng, data.lat], 'EPSG:4326',   'EPSG:3857')
+    );
+
+    const layerLines = new ol.layer.Vector({
+      source: new ol.source.Vector({
+          features: [new ol.Feature({
+              geometry: new ol.geom.LineString(coordList, 'XY'),
+              name: 'Line'
+          })]
+      })
+    });*/
+
+    mapControl.addLayer(vectorLayer);
+  },
+
+
+
   /**
    * Render the map container
    * @param {HTMLElement} mountNode - map DOM-container
@@ -121,5 +164,11 @@ export default View.extend({
     const [coordStart, coordEnd] = coordItems.map(item => item.get('location'));
 
     this.model.get('mapRoutingModel').search(coordStart, coordEnd);
+  },
+
+
+
+  _onRouteDataChange(model) {
+    this.renderRoutes(model.get('data'));
   }
 });
